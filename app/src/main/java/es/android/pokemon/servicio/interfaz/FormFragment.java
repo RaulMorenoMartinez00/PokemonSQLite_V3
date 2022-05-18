@@ -22,6 +22,11 @@ import es.android.pokemon.repositorio.implementacion.RepositorioSQLiteImpl;
 
 public class FormFragment extends Fragment {
 
+    private EditText np;
+    private EditText dp;
+    private int dbL;
+    RepositorioSQLiteImpl pokemondb;
+
     private FragmentFormBinding binding;
 
     @Nullable
@@ -29,6 +34,28 @@ public class FormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,
                              Bundle savedInstanceState) {
             binding = FragmentFormBinding.inflate(inflater, container, false);
+
+        pokemondb= new RepositorioSQLiteImpl((getContext()));
+
+        List <Pokemon> pokemonList = pokemondb.getAll();
+
+        dbL= pokemonList.size();
+        np = binding.nombre;
+        dp = binding.descripcion;
+        binding.button.setOnClickListener(view -> {
+            crearPokemon();
+        });
+
             return binding.getRoot();
+    }
+    private void crearPokemon(){
+
+        Pokemon pokemon= new Pokemon(dbL+1, np.getText().toString(), "image.jpg", dp.getText().toString());
+
+        pokemondb.add(pokemon);
+
+        np.getText().clear();
+        dp.getText().clear();
+
     }
 }
