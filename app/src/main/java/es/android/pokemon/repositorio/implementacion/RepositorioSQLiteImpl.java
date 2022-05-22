@@ -75,20 +75,6 @@ public class RepositorioSQLiteImpl extends SQLiteOpenHelper implements Repositor
 
     @Override
     public List<Pokemon> getAll() {
-        SQLiteDatabase db1 = getWritableDatabase();
-        Pokemon p1 = new Pokemon(0, "Pikachu", "pikachu.jpg", "Soy Pikachu");
-        this.save(p1, db1);
-        Pokemon p2 = new Pokemon(1, "Flygon", "flygon.jpg", "Soy Flygon");
-        this.save(p2, db1);
-        Pokemon p3 = new Pokemon(2, "Psyduck", "psyduck.jpg", "Soy Psyduck");
-        this.save(p3, db1);
-        Pokemon p4 = new Pokemon(3, "Victini", "victini.jpg", "Soy Victini");
-        this.save(p4, db1);
-        Pokemon p5 = new Pokemon(4, "Bastiodon", "bastiodon.jpg", "Soy Bastiodon");
-        this.save(p5, db1);
-
-
-
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(
                 ContratoPokemon.EntradaPokemon.NOMBRE_TABLA, // Nombre de la tabla
@@ -150,7 +136,7 @@ public class RepositorioSQLiteImpl extends SQLiteOpenHelper implements Repositor
         // Actualizar...
         db.update(ContratoPokemon.EntradaPokemon.NOMBRE_TABLA,
                 values,
-                "name=?",
+                "nombre=?",
                 new String[] {pokemon.getName()});
     }
 
@@ -158,7 +144,7 @@ public class RepositorioSQLiteImpl extends SQLiteOpenHelper implements Repositor
     public void delete(Pokemon pokemon) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ContratoPokemon.EntradaPokemon.NOMBRE_TABLA,
-                "name=?",
+                "nombre=?",
                 new String[] {pokemon.getName()});
     }
 

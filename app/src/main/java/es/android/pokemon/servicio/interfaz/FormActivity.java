@@ -12,13 +12,6 @@ import android.widget.EditText;
 import java.util.List;
 
 public class FormActivity extends AppCompatActivity {
-
-    private EditText np;
-    private EditText dp;
-    private int dbL;
-    RepositorioSQLiteImpl pokemondb;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

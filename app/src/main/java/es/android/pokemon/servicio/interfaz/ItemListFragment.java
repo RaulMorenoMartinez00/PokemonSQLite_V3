@@ -1,8 +1,6 @@
 package es.android.pokemon.servicio.interfaz;
 
 
-import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import es.android.pokemon.R;
 
 import es.android.pokemon.databinding.FragmentItemListBinding;
@@ -25,7 +21,6 @@ import es.android.pokemon.databinding.ItemListContentBinding;
 import es.android.pokemon.entidad.Pokemon;
 import es.android.pokemon.repositorio.implementacion.RepositorioSQLiteImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +35,7 @@ public class ItemListFragment extends Fragment {
 
     RepositorioSQLiteImpl pokemondb;
     private FragmentItemListBinding binding;
+    public static RecyclerView recyclerView= null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,13 +44,12 @@ public class ItemListFragment extends Fragment {
 
         return binding.getRoot();
 
+
     }
     
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        RecyclerView recyclerView;
 
         binding.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,11 +66,10 @@ public class ItemListFragment extends Fragment {
         List<Pokemon> pokemonList = pokemondb.getAll();
         recyclerView = getActivity().findViewById(R.id.item_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView,itemDetailFragmentContainer, pokemonList) ;
-
+        setupRecyclerView((RecyclerView) recyclerView, pokemonList) ;
         }
 
-    private void setupRecyclerView(RecyclerView recyclerView, View itemDetailFragmentContainer, List<Pokemon> items) {
+    private void setupRecyclerView(RecyclerView recyclerView, List<Pokemon> items) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(items));
     }
 
@@ -129,11 +123,28 @@ public class ItemListFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
+            final Button mEliminarButton;
 
             ViewHolder(ItemListContentBinding binding) {
+
                 super(binding.getRoot());
                 mIdView = binding.idText;
                 mContentView = binding.content;
+                mEliminarButton =binding.Eliminar;
+                RepositorioSQLiteImpl db = new RepositorioSQLiteImpl(mContentView.getContext());
+
+                mEliminarButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Pokemon pokemon;
+                        int id;
+                        id= Integer.parseInt(mIdView.getText().toString());
+                        pokemon=mValues.get(id);
+
+                        db.delete(pokemon);
+                        recyclerView.getAdapter().notifyItemRemoved(id);
+                    }
+                });
             }
         }
     }
