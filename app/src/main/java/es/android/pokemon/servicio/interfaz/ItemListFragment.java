@@ -91,7 +91,7 @@ public class ItemListFragment extends Fragment {
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
             ItemListContentBinding binding = ItemListContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-            return new ViewHolder(binding);
+            return new ViewHolder(binding, this);
         }
 
         @Override
@@ -125,7 +125,7 @@ public class ItemListFragment extends Fragment {
             final TextView mContentView;
             final Button mEliminarButton;
 
-            ViewHolder(ItemListContentBinding binding) {
+            ViewHolder(ItemListContentBinding binding, SimpleItemRecyclerViewAdapter adapter) {
 
                 super(binding.getRoot());
                 mIdView = binding.idText;
@@ -136,13 +136,14 @@ public class ItemListFragment extends Fragment {
                 mEliminarButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Pokemon pokemon;
-                        int id;
-                        id= Integer.parseInt(mIdView.getText().toString());
-                        pokemon=mValues.get(id);
 
-                        db.delete(pokemon);
-                        recyclerView.getAdapter().notifyItemRemoved(id);
+                        int id= Integer.parseInt(mIdView.getText().toString());
+                       Pokemon pokemon=mValues.remove(id);
+
+                        if(pokemon !=null){
+                            db.delete(pokemon);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }
